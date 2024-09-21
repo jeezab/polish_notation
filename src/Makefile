@@ -1,20 +1,30 @@
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra -std=c11
-#-fsanitize=leak -fsanitize=address -fsanitize=unreachable -fsanitize=undefined
+CC      = gcc
+CFLAGS  = -Wall -Werror -Wextra -std=c11
+# CFLAGS += -fsanitize=leak -fsanitize=address -fsanitize=unreachable -fsanitize=undefined
 
-SRC = ./main.c ./input/input_expr.c ./stack/stack.c ./whotype/whotype.c \
-      ./dejkstra_alg/dejkstra.c ./dejkstra_alg/exprLogicCheck.c
-HDR = ./input/input_expr.h ./stack/stack.h ./whotype/whotype.h \
-      ./dejkstra_alg/dejkstra.h ./dejkstra_alg/exprLogicCheck.h
+SRC     = ./main.c \
+          ./input/input_expr.c \
+          ./stack/stack.c \
+          ./whotype/whotype.c \
+          ./dejkstra_alg/dejkstra.c \
+          ./dejkstra_alg/exprLogicCheck.c \
+          ./polish_calc/polish_calc.c
+
+HDR     = ./input/input_expr.h \
+          ./stack/stack.h \
+          ./whotype/whotype.h \
+          ./dejkstra_alg/dejkstra.h \
+          ./dejkstra_alg/exprLogicCheck.h \
+          ./polish_calc/polish_calc.h
+
 OBJ_DIR = ./objs
-
-OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
-
-BUILD = ../build
+BUILD   = ../build
+OBJ     = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
 .PHONY: all clean rebuild cpplang clang_fix vlgr run
 
 .SILENT:
+
 all: polish_notation
 
 polish_notation: $(BUILD)/polish_notation.out
@@ -30,7 +40,7 @@ $(OBJ_DIR)/%.o: ./%.c
 
 $(BUILD)/polish_notation.out: $(OBJ)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -lm -o $@
 
 clean:
 	rm -rf $(OBJ_DIR)
