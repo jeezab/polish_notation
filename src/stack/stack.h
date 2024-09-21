@@ -14,7 +14,7 @@ typedef struct Stack {
 } Stack;
 
 void initStack(Stack *stack);
-int isEmpty(Stack *stack);
+int isEmpty(const Stack *stack);
 void push(Stack *stack, int value);
 int pop(Stack *stack);
 void destroyStack(Stack *stack);
