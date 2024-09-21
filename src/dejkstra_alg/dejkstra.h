@@ -14,16 +14,16 @@ char* infixToPostfix(const char* infix);
 char* doPostfixConvert(const char* modifiedInfix);
 char* parseDigits(const char* modifiedInfix, int* i, char* postfix, int* j);
 char* parseLetter(const char* modifiedInfix, int* i, char* postfix, int* j,
-                  Stack* operatorStack);
+                  Stack_int* operatorStack);
 void parseOperatorParentheses(const char* modifiedInfix, int* i, char* postfix,
-                              int* j, Stack* operatorStack);
+                              int* j, Stack_int* operatorStack);
 
 void handleDigitsAndVariables(const char* expression, int* i, char* postfix,
                               int* j);
-void handleOperatorAndParentheses(Stack* operatorStack, char token,
+void handleOperatorAndParentheses(Stack_int* operatorStack, char token,
                                   char* postfix, int* j);
-void popUntilEmpty(Stack* operatorStack, char* postfix, int* j);
-void popUntilLeftParen(Stack* operatorStack, char* postfix, int* j);
+void popUntilEmpty(Stack_int* operatorStack, char* postfix, int* j);
+void popUntilLeftParen(Stack_int* operatorStack, char* postfix, int* j);
 void appendOperatorOrFunction(int op, char* postfix, int* j);
 
 char* replaceUnaryMinus(const char* expression);

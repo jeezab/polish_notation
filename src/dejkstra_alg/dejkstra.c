@@ -9,8 +9,6 @@ char* infixToPostfix(const char* infix) {
         return NULL;
     }
 
-    printf("mod~: %s\n", modifiedInfix);
-
     char* postfix = doPostfixConvert(modifiedInfix);
 
     free(modifiedInfix);
@@ -18,8 +16,8 @@ char* infixToPostfix(const char* infix) {
 }
 
 char* doPostfixConvert(const char* modifiedInfix) {
-    Stack operatorStack;
-    initStack(&operatorStack);
+    Stack_int operatorStack;
+    initStack_int(&operatorStack);
 
     int length = strlen(modifiedInfix);
     char* postfix = (char*)malloc(4 * length * sizeof(char));
@@ -48,7 +46,7 @@ char* doPostfixConvert(const char* modifiedInfix) {
     popUntilEmpty(&operatorStack, postfix, &j);
     postfix[j] = '\0';
 
-    destroyStack(&operatorStack);
+    destroyStack_int(&operatorStack);
     return postfix;
 }
 
@@ -58,7 +56,7 @@ char* parseDigits(const char* modifiedInfix, int* i, char* postfix, int* j) {
 }
 
 char* parseLetter(const char* modifiedInfix, int* i, char* postfix, int* j,
-                  Stack* operatorStack) {
+                  Stack_int* operatorStack) {
     char name[10];
     int k = 0;
 
@@ -72,7 +70,7 @@ char* parseLetter(const char* modifiedInfix, int* i, char* postfix, int* j,
 
     int funcCode = getFunctionCode(name);
     if (funcCode != -1) {
-        push(operatorStack, funcCode);
+        push_int(operatorStack, funcCode);
     } else {
         // append variable names or single variables to postfix
         strcpy(&postfix[*j], name);
@@ -84,7 +82,7 @@ char* parseLetter(const char* modifiedInfix, int* i, char* postfix, int* j,
 }
 
 void parseOperatorParentheses(const char* modifiedInfix, int* i, char* postfix,
-                              int* j, Stack* operatorStack) {
+                              int* j, Stack_int* operatorStack) {
     handleOperatorAndParentheses(operatorStack, modifiedInfix[*i], postfix, j);
     (*i)++;
 }
@@ -98,20 +96,20 @@ void handleDigitsAndVariables(const char* expression, int* i, char* postfix,
     postfix[(*j)++] = ' ';
 }
 
-void handleOperatorAndParentheses(Stack* operatorStack, char token,
+void handleOperatorAndParentheses(Stack_int* operatorStack, char token,
                                   char* postfix, int* j) {
     if (token == '(') {
-        push(operatorStack, '(');
+        push_int(operatorStack, '(');
     } else if (token == ')') {
         popUntilLeftParen(operatorStack, postfix, j);
     } else {
-        while (!isEmpty(operatorStack)) {
+        while (!isEmpty_int(operatorStack)) {
             int topOp = operatorStack->top->data;
             if (isFunctionToken(topOp) || isOperator((char)topOp)) {
                 if ((precedence(topOp) > precedence(token)) ||
                     (precedence(topOp) == precedence(token) &&
                      isLeftAssociative(topOp))) {
-                    int op = pop(operatorStack);
+                    int op = pop_int(operatorStack);
                     appendOperatorOrFunction(op, postfix, j);
                 } else {
                     break;
@@ -120,24 +118,24 @@ void handleOperatorAndParentheses(Stack* operatorStack, char token,
                 break;
             }
         }
-        push(operatorStack, token);
+        push_int(operatorStack, token);
     }
 }
 
-void popUntilEmpty(Stack* operatorStack, char* postfix, int* j) {
-    while (!isEmpty(operatorStack)) {
-        int op = pop(operatorStack);
+void popUntilEmpty(Stack_int* operatorStack, char* postfix, int* j) {
+    while (!isEmpty_int(operatorStack)) {
+        int op = pop_int(operatorStack);
         appendOperatorOrFunction(op, postfix, j);
     }
 }
 
-void popUntilLeftParen(Stack* operatorStack, char* postfix, int* j) {
-    while (!isEmpty(operatorStack) && operatorStack->top->data != '(') {
-        int op = pop(operatorStack);
+void popUntilLeftParen(Stack_int* operatorStack, char* postfix, int* j) {
+    while (!isEmpty_int(operatorStack) && operatorStack->top->data != '(') {
+        int op = pop_int(operatorStack);
         appendOperatorOrFunction(op, postfix, j);
     }
-    if (!isEmpty(operatorStack)) {
-        pop(operatorStack);  // Pop '('
+    if (!isEmpty_int(operatorStack)) {
+        pop_int(operatorStack);  // Pop '('
     }
 }
 
