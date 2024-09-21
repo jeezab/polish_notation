@@ -4,19 +4,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct StackNode {
-    int data;
-    struct StackNode *next;
-} StackNode;
+#define DECLARE_STACK_TYPE(TYPE, TYPE_SUFFIX)                        \
+    typedef struct StackNode_##TYPE_SUFFIX {                         \
+        TYPE data;                                                   \
+        struct StackNode_##TYPE_SUFFIX *next;                        \
+    } StackNode_##TYPE_SUFFIX;                                       \
+                                                                     \
+    typedef struct Stack_##TYPE_SUFFIX {                             \
+        StackNode_##TYPE_SUFFIX *top;                                \
+    } Stack_##TYPE_SUFFIX;                                           \
+                                                                     \
+    void initStack_##TYPE_SUFFIX(Stack_##TYPE_SUFFIX *stack);        \
+    int isEmpty_##TYPE_SUFFIX(const Stack_##TYPE_SUFFIX *stack);     \
+    void push_##TYPE_SUFFIX(Stack_##TYPE_SUFFIX *stack, TYPE value); \
+    TYPE pop_##TYPE_SUFFIX(Stack_##TYPE_SUFFIX *stack);              \
+    void destroyStack_##TYPE_SUFFIX(Stack_##TYPE_SUFFIX *stack);
 
-typedef struct Stack {
-    StackNode *top;
-} Stack;
-
-void initStack(Stack *stack);
-int isEmpty(const Stack *stack);
-void push(Stack *stack, int value);
-int pop(Stack *stack);
-void destroyStack(Stack *stack);
+DECLARE_STACK_TYPE(int, int)
+DECLARE_STACK_TYPE(double, double)
 
 #endif  // STACK_H
