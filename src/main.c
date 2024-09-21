@@ -20,12 +20,12 @@ int general() {
         return 1;
     }
 
-    // len = space_clear(&str, len);
-    //
-    // if (len <= 0) {
-    //   input_err(len);
-    //   return 1;
-    // }
+    len = space_clear(&str, len);
+
+    if (len <= 0) {
+        input_err(len);
+        return 1;
+    }
 
     len = insert_mul(&str, len);
 
@@ -34,7 +34,7 @@ int general() {
         return 1;
     }
 
-    printf("src: %s\n", str);
+    printf("input: %s\n", str);
 
     printf("\n");
 
