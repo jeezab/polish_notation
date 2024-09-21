@@ -1,5 +1,6 @@
 #include "./dejkstra_alg/dejkstra.h"
 #include "./input/input_expr.h"
+#include "./polish_calc/polish_calc.h"
 
 int general();
 
@@ -45,6 +46,12 @@ int general() {
     if (postfixExpression) {
         printf("Postfix: %s\n", postfixExpression);
 
+        double result = 0;
+        int err_code = polish_calc(postfixExpression, &result);
+        if (err_code == 1) {
+            printf("Result: %lf\n", result);
+        } else
+            print_error_calc(err_code);
         free(postfixExpression);
     }
 
