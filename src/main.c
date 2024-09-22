@@ -26,12 +26,11 @@ int general() {
     }
 
     char* postfixExpression = convert_expression_to_postfix(input_str);
-    printf("Postfix: %s\n", postfixExpression);
-    free(input_str);
-
     if (postfixExpression == NULL) {
         return 1;
     }
+    printf("Postfix: %s\n", postfixExpression);
+    free(input_str);
 
     plot_postfix(postfixExpression);
 
@@ -76,10 +75,9 @@ char* convert_expression_to_postfix(const char* str) {
         return NULL;
     }
 
-    char* postfixExpression = infixToPostfix(str);
+    char* postfixExpression = infix_to_postfix(str);
     if (postfixExpression == NULL) {
-        fprintf(stderr,
-                "Error: Failed to convert infix expression to postfix.\n");
+        printf("Error: Failed to convert infix expression to postfix!\n");
         return NULL;
     }
 

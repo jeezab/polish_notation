@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../dejkstra_alg//exprLogicCheck.h"
+#include "../dejkstra_alg//expr_logic_check.h"
 #include "../stack/stack.h"
 
 #define ERROR_NONE 1

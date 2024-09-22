@@ -25,7 +25,7 @@ int polish_calc(const char* postfix, double* result) {
                 push_double(&operandStack, temp_result);
             }
         } else {
-            int func_code = getFunctionCode(token);
+            int func_code = get_function_code(token);
             if (func_code != -1) {
                 double operand = pop_double(&operandStack);
                 double temp_result;

@@ -7,7 +7,7 @@ SRC     = ./main.c \
           ./stack/stack.c \
           ./whotype/whotype.c \
           ./dejkstra_alg/dejkstra.c \
-          ./dejkstra_alg/exprLogicCheck.c \
+          ./dejkstra_alg/expr_logic_check.c \
           ./polish_calc/polish_calc.c \
           ./graph/plot_graph.c
 
@@ -15,7 +15,7 @@ HDR     = ./input/input_expr.h \
           ./stack/stack.h \
           ./whotype/whotype.h \
           ./dejkstra_alg/dejkstra.h \
-          ./dejkstra_alg/exprLogicCheck.h \
+          ./dejkstra_alg/expr_logic_check.h \
           ./polish_calc/polish_calc.h \
           ./graph/plot_graph.h
 
