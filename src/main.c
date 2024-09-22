@@ -33,7 +33,7 @@ int general() {
         return 1;
     }
 
-    display_and_plot_postfix(postfixExpression);
+    plot_postfix(postfixExpression);
 
     free(postfixExpression);
     return 0;
