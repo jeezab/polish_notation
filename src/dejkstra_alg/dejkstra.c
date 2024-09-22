@@ -207,8 +207,6 @@ int precedence(int op) {
         return 5;
     }
     switch (op) {
-        case OP_UNARY_MINUS:
-            return 4;
         case OP_POWER:
             return 3;
         case OP_MULTIPLY:
@@ -216,6 +214,7 @@ int precedence(int op) {
             return 2;
         case OP_PLUS:
         case OP_MINUS:
+        case OP_UNARY_MINUS:
             return 1;
         default:
             return 0;
@@ -223,9 +222,5 @@ int precedence(int op) {
 }
 
 int is_left_associative(int op) {
-    if (op == OP_POWER || op == OP_UNARY_MINUS) {
-        return 0;
-    } else {
-        return 1;
-    }
+    return (op == OP_POWER || op == OP_UNARY_MINUS) ? 0 : 1;
 }
