@@ -50,8 +50,12 @@ char* do_postfix_convert(const char* modified_infix) {
     return postfix;
 }
 
-char* parse_digits(const char* modified_infix, int* i, char* postfix, int* j) {
-    handle_digits_and_variables(modified_infix, i, postfix, j);
+char* parse_digits(const char* expression, int* i, char* postfix, int* j) {
+    while (isDigit(expression[*i]) || expression[*i] == '.') {
+        postfix[(*j)++] = expression[*i];
+        (*i)++;
+    }
+    postfix[(*j)++] = ' ';
     return postfix;
 }
 
@@ -87,15 +91,6 @@ void parse_operator_parentheses(const char* modified_infix, int* i,
     handle_operator_and_parentheses(operator_stack, modified_infix[*i], postfix,
                                     j);
     (*i)++;
-}
-
-void handle_digits_and_variables(const char* expression, int* i, char* postfix,
-                                 int* j) {
-    while (isDigit(expression[*i]) || expression[*i] == '.') {
-        postfix[(*j)++] = expression[*i];
-        (*i)++;
-    }
-    postfix[(*j)++] = ' ';
 }
 
 void handle_operator_and_parentheses(Stack_int* operator_stack, char token,

@@ -12,15 +12,13 @@
 char* infix_to_postfix(const char* infix);
 
 char* do_postfix_convert(const char* modified_infix);
-char* parse_digits(const char* modified_infix, int* i, char* postfix, int* j);
+char* parse_digits(const char* expression, int* i, char* postfix, int* j);
 char* parse_letter(const char* modified_infix, int* i, char* postfix, int* j,
                    Stack_int* operator_stack);
 void parse_operator_parentheses(const char* modified_infix, int* i,
                                 char* postfix, int* j,
                                 Stack_int* operator_stack);
 
-void handle_digits_and_variables(const char* expression, int* i, char* postfix,
-                                 int* j);
 void handle_operator_and_parentheses(Stack_int* operator_stack, char token,
                                      char* postfix, int* j);
 void pop_until_empty(Stack_int* operator_stack, char* postfix, int* j);
