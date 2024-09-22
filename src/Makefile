@@ -8,14 +8,16 @@ SRC     = ./main.c \
           ./whotype/whotype.c \
           ./dejkstra_alg/dejkstra.c \
           ./dejkstra_alg/exprLogicCheck.c \
-          ./polish_calc/polish_calc.c
+          ./polish_calc/polish_calc.c \
+          ./graph/plot_graph.c
 
 HDR     = ./input/input_expr.h \
           ./stack/stack.h \
           ./whotype/whotype.h \
           ./dejkstra_alg/dejkstra.h \
           ./dejkstra_alg/exprLogicCheck.h \
-          ./polish_calc/polish_calc.h
+          ./polish_calc/polish_calc.h \
+          ./graph/plot_graph.h
 
 OBJ_DIR = ./objs
 BUILD   = ../build
