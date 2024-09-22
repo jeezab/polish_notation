@@ -23,14 +23,14 @@ OBJ_DIR = ./objs
 BUILD   = ../build
 OBJ     = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
-.PHONY: all clean rebuild cpplang clang_fix vlgr run
+.PHONY: all build_exe clean rebuild cpplang clang_fix vlgr run
 
 .SILENT:
 
 all: polish_notation
 
 polish_notation: $(BUILD)/polish_notation.out
-	@echo "polish_notation: build complete"
+	@echo "polish_notation.out: build complete"
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -43,6 +43,11 @@ $(OBJ_DIR)/%.o: ./%.c
 $(BUILD)/polish_notation.out: $(OBJ)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $^ -lm -o $@
+
+build_exe: $(OBJ)
+	@mkdir -p $(BUILD)
+	x86_64-w64-mingw32-gcc $(CFLAGS) $^ -lm -o $(BUILD)/polish_notation.exe
+	@echo "polish_notation.exe: build complete"
 
 clean:
 	rm -rf $(OBJ_DIR)
