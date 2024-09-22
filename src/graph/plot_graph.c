@@ -4,26 +4,20 @@ void plot_graph(const char *postfixExpression) {
     int x_min = -20, x_max = 20;
     int y_min = -10, y_max = 10;
 
-    char graphnet[GRAPH_HEIGHT][GRAPH_WIDTH];
+    int num_points = 0;
+    Point *points = gen_points(postfixExpression, x_min, x_max, &num_points);
 
-    initialize_graphnet(graphnet);
-
-    plot_function(postfixExpression, graphnet, x_min, x_max, y_min, y_max);
-
-    draw_axes(graphnet, x_min, x_max, y_min, y_max);
-
-    print_graphnet(graphnet);
+    for (int y = 0; y < GRAPH_HEIGHT; y++) {
+        for (int x = 0; x < GRAPH_WIDTH; x++) {
+            graph_draw_cns(postfixExpression, x_min, x_max, y_min, y_max, x, y);
+        }
+        printf("\n");
+    }
 
     printf("x: [%d; %d]\n", x_min, x_max);
     printf("y: [%d; %d]\n", y_min, y_max);
-}
 
-void initialize_graphnet(char graphnet[GRAPH_HEIGHT][GRAPH_WIDTH]) {
-    for (int i = 0; i < GRAPH_HEIGHT; i++) {
-        for (int j = 0; j < GRAPH_WIDTH; j++) {
-            graphnet[i][j] = ' ';
-        }
-    }
+    free(points);
 }
 
 int evaluate_postfix_expression(const char *postfixExpression, double x_value,
@@ -38,14 +32,14 @@ int evaluate_postfix_expression(const char *postfixExpression, double x_value,
     return status;
 }
 
-void plot_function(const char *postfixExpression,
-                   char graphnet[GRAPH_HEIGHT][GRAPH_WIDTH], int x_min,
-                   int x_max, int y_min, int y_max) {
+Point *gen_points(const char *postfixExpression, int x_min, int x_max,
+                  int *num_points) {
     double total_x_range = x_max - x_min;
-    double total_y_range = y_max - y_min;
 
     double x_step = total_x_range / GRAPH_WIDTH;
-    double y_step = total_y_range / GRAPH_HEIGHT;
+    Point *points = (Point *)malloc(GRAPH_WIDTH * sizeof(Point));
+
+    *num_points = 0;
 
     for (int x_axis = 0; x_axis < GRAPH_WIDTH; x_axis++) {
         double x_value = x_min + x_axis * x_step;
@@ -53,52 +47,59 @@ void plot_function(const char *postfixExpression,
 
         if (evaluate_postfix_expression(postfixExpression, x_value, &result) ==
             ERROR_NONE) {
-            double relative_y = (y_max - result) / y_step;
-            int y_axis = (int)(relative_y + 0.5);
-
-            if (y_axis > 0 && y_axis < GRAPH_HEIGHT) {
-                graphnet[y_axis][x_axis] = '*';
-            }
+            points[*num_points].x_value = x_value;
+            points[*num_points].y_value = result;
+            (*num_points)++;
         }
     }
+
+    return points;
 }
 
-void draw_axes(char graphnet[GRAPH_HEIGHT][GRAPH_WIDTH], int x_min, int x_max,
-               int y_min, int y_max) {
-    int x_axis_pos = (int)((double)(y_max) / (y_max - y_min) * GRAPH_HEIGHT);
-    int y_axis_pos = (int)((double)(-x_min) / (x_max - x_min) * GRAPH_WIDTH);
+void graph_draw_cns(const char *postfixExpression, int x_min, int x_max,
+                    int y_min, int y_max, int x, int y) {
+    if (x_max == x_min || y_max == y_min) {
+        printf(" ");
+        return;
+    }
 
-    if (x_axis_pos < 0) x_axis_pos = 0;
-    if (x_axis_pos >= GRAPH_HEIGHT) x_axis_pos = GRAPH_HEIGHT / 2;
-    if (y_axis_pos < 0) y_axis_pos = GRAPH_WIDTH / 2;
-    if (y_axis_pos >= GRAPH_WIDTH) y_axis_pos = GRAPH_WIDTH / 2;
+    double x_scale = (double)(x_max - x_min) / GRAPH_WIDTH;
+    double y_scale = (double)(y_max - y_min) / GRAPH_HEIGHT;
 
-    for (int i = 0; i < GRAPH_HEIGHT; i++) {
-        for (int j = 0; j < GRAPH_WIDTH; j++) {
-            if (graphnet[i][j] != '*') {
-                if (i == x_axis_pos && j == y_axis_pos) {
-                    graphnet[i][j] = '+';
-                } else if ((i == 0) && (j == GRAPH_WIDTH / 2)) {
-                    graphnet[i][j] = 'y';
-                } else if ((i == GRAPH_HEIGHT / 2) && (j == GRAPH_WIDTH - 1)) {
-                    graphnet[i][j] = 'x';
-                } else if (i == x_axis_pos) {
-                    graphnet[i][j] = '-';
-                } else if (j == y_axis_pos) {
-                    graphnet[i][j] = '|';
-                }
-            }
+    double x_value = x_min + x * x_scale;
+    double result = 0.0;
+
+    int y_zero = -1;
+    if (y_min <= 0 && y_max >= 0) {
+        y_zero = (int)round(((double)(y_max) / (y_max - y_min)) * GRAPH_HEIGHT);
+    }
+
+    int x_zero = -1;
+    if (x_min <= 0 && x_max >= 0) {
+        x_zero = (int)round(((double)(-x_min) / (x_max - x_min)) * GRAPH_WIDTH);
+    }
+
+    char ch = ' ';
+
+    if (x_zero != -1 && x == x_zero && y_zero != -1 && y == y_zero) {
+        ch = '+';
+    } else if (x_zero != -1 && x == x_zero) {
+        ch = '|';
+    } else if (y_zero != -1 && y == y_zero) {
+        ch = '-';
+    }
+
+    if (evaluate_postfix_expression(postfixExpression, x_value, &result) ==
+        ERROR_NONE) {
+        double y_pos = (double)(y_max - result) / y_scale;
+        int y_axis = (int)round(y_pos);
+
+        if (fabs((double)y_axis - y) <= DELTA) {
+            ch = '*';
         }
     }
-}
 
-void print_graphnet(const char graphnet[GRAPH_HEIGHT][GRAPH_WIDTH]) {
-    for (int y = 0; y < GRAPH_HEIGHT; y++) {
-        for (int x = 0; x < GRAPH_WIDTH; x++) {
-            printf("%c", graphnet[y][x]);
-        }
-        printf("\n");
-    }
+    printf("%c", ch);
 }
 
 char *replace_x_with_value(const char *str, double value) {
@@ -185,7 +186,7 @@ int format_double(double value, char *buffer, size_t size) {
     if (buffer == NULL) {
         return -1;
     }
-    // Format the absolute value with two decimal places
+
     int len = snprintf(buffer, size, "%.2f", fabs(value));
     return len;
 }

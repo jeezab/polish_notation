@@ -8,19 +8,23 @@
 
 #include "../polish_calc/polish_calc.h"
 
-#define GRAPH_WIDTH 40
+#define GRAPH_WIDTH 80
 #define GRAPH_HEIGHT 20
 
+#define DELTA 0.5
+
+typedef struct {
+    double x_value;
+    double y_value;
+} Point;
+
 void plot_graph(const char* postfixExpression);
-void initialize_graphnet(char graphnet[GRAPH_HEIGHT][GRAPH_WIDTH]);
 int evaluate_postfix_expression(const char* postfixExpression, double x_value,
                                 double* result);
-void plot_function(const char* postfixExpression,
-                   char graphnet[GRAPH_HEIGHT][GRAPH_WIDTH], int x_min,
-                   int x_max, int y_min, int y_max);
-void draw_axes(char graphnet[GRAPH_HEIGHT][GRAPH_WIDTH], int x_min, int x_max,
-               int y_min, int y_max);
-void print_graphnet(const char graphnet[GRAPH_HEIGHT][GRAPH_WIDTH]);
+Point* gen_points(const char* postfixExpression, int x_min, int x_max,
+                  int* num_points);
+void graph_draw_cns(const char* postfixExpression, int x_min, int x_max,
+                    int y_min, int y_max, int x, int y);
 
 char* replace_x_with_value(const char* str, double value);
 char* replace_character(const char* src, char target, const char* replacement,
