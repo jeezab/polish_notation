@@ -53,7 +53,7 @@ clean:
 	rm -rf $(OBJ_DIR)
 	rm -f $(BUILD)/polish_notation.out
 
-rebuild: clean all
+rebuild: clean all build_exe
 
 cpplang:
 	clang-format -n $(SRC) $(HDR)
