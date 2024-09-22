@@ -40,4 +40,4 @@ polish_notation/
 
 ## Usage Example
 
-![funcsTest01](https://github.com/user-attachments/assets/ef729283-bbb5-4a63-9c09-30fd148f2591)
+![Example Image](images/funcsTest01.png)
