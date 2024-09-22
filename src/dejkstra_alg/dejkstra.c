@@ -208,13 +208,14 @@ int precedence(int op) {
     }
     switch (op) {
         case OP_POWER:
-            return 3;
+            return 4;
         case OP_MULTIPLY:
         case OP_DIVIDE:
+            return 3;
+        case OP_UNARY_MINUS:
             return 2;
         case OP_PLUS:
         case OP_MINUS:
-        case OP_UNARY_MINUS:
             return 1;
         default:
             return 0;
