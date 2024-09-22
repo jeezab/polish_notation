@@ -13,7 +13,7 @@
         StackNode_##TYPE_SUFFIX *newNode = (StackNode_##TYPE_SUFFIX *)malloc( \
             sizeof(StackNode_##TYPE_SUFFIX));                                 \
         if (!newNode) {                                                       \
-            printf("Memory allocation failed [push()]\n");           \
+            printf("Memory allocation failed [push()]\n");                    \
             exit(EXIT_FAILURE);                                               \
         }                                                                     \
         newNode->data = value;                                                \
@@ -23,7 +23,7 @@
                                                                               \
     TYPE pop_##TYPE_SUFFIX(Stack_##TYPE_SUFFIX *stack) {                      \
         if (isEmpty_##TYPE_SUFFIX(stack)) {                                   \
-            printf("Stack is empty! [pop()]\n");                     \
+            printf("Stack is empty! [pop()]\n");                              \
             exit(EXIT_FAILURE);                                               \
         }                                                                     \
         StackNode_##TYPE_SUFFIX *temp = stack->top;                           \
