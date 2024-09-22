@@ -1,4 +1,4 @@
-# Polish Notation Converter, Evaluator, and Graph Plotter
+# Polish Notation Converter
 
 ## Overview
 
@@ -36,3 +36,8 @@ polish_notation/
 │   ├── polish_calc/    # Polish calculator for postfix evaluation
 │   └── main.c          # Main entry point of the program
 └── README.md           # This file
+```
+
+## Usage Example
+
+![funcsTest01](https://github.com/user-attachments/assets/ef729283-bbb5-4a63-9c09-30fd148f2591)
