@@ -8,8 +8,8 @@
  * -1 - memory alloc/realloc failed
  */
 
-int input_expr(char** str) {
-    *str = (char*)malloc(2 * sizeof(char));
+int input_expr(char **const str) {
+    *str = (char *)malloc(2 * sizeof(char));
     if (*str == NULL) {
         return -1;  // memory alloc/realloc error
     }
@@ -20,7 +20,7 @@ int input_expr(char** str) {
     char inp = getchar();
     while (inp != '\n') {
         s_len++;
-        char* tmp = realloc(*str, (s_len + 1) * sizeof(char));
+        char *const tmp = realloc(*str, (s_len + 1) * sizeof(char));
         if (tmp == NULL) {
             free(*str);
             return -1;  // memory alloc/realloc error
@@ -38,19 +38,19 @@ int input_expr(char** str) {
  * example: 2 sin(x)
  * out: 2sin(x)
  */
-int space_clear(char** str, int len) {
+int space_clear(char **const str, int const len) {
     if (len == 0 || *str == NULL || str == NULL) {
         return 0;
     }
 
-    char* new_str = malloc((len + 1) * sizeof(char));
+    char *const new_str = malloc((len + 1) * sizeof(char));
     if (new_str == NULL) {
         return -1;
     }
 
-    int new_len = copy_characters(str, new_str);
+    int const new_len = copy_characters((char const **const)str, new_str);
 
-    char* tmp = realloc(*str, (new_len + 1) * sizeof(char));
+    char *const tmp = realloc(*str, (new_len + 1) * sizeof(char));
     if (tmp == NULL) {
         free(new_str);
         return -1;
@@ -63,14 +63,14 @@ int space_clear(char** str, int len) {
     return new_len;
 }
 
-int copy_characters(char** str, char* new_str) {
+int copy_characters(char const **const str, char *const new_str) {
     int i = 0;
     int j = 0;
     char prev_char = '\0';
 
     while ((*str)[i] != '\0') {
-        char current_char = (*str)[i];
-        char next_char = (*str)[i + 1];
+        char const current_char = (*str)[i];
+        char const next_char = (*str)[i + 1];
 
         if (current_char != ' ') {
             new_str[j++] = current_char;
@@ -93,7 +93,7 @@ int copy_characters(char** str, char* new_str) {
     return j;
 }
 
-int should_remove_space(char prev, char current, char next) {
+int should_remove_space(char const prev, char const current, char const next) {
     if (current == ' ') {
         if (((isDigit(prev) || prev == '.') && isLetter(next)) ||
             (isLetter(prev) && (isDigit(next) || next == '.'))) {
@@ -110,20 +110,21 @@ int should_remove_space(char prev, char current, char next) {
  * example: 2sin(4x)
  * out: 2*sin(4*x)
  */
-int insert_mul(char** str, int len) {
+int insert_mul(char **const str, int const len) {
     if (len == 0 || *str == NULL || str == NULL) {
         return 0;
     }
 
-    char* new_str = malloc((len * 2 + 1) * sizeof(char));
+    char *const new_str = malloc((len * 2 + 1) * sizeof(char));
     if (new_str == NULL) {
         return -1;
     }
 
     TokenType prev_token_type = TOKEN_NONE;
-    int new_len = process_tokens(str, new_str, &prev_token_type);
+    int const new_len =
+        process_tokens((char const **const)str, new_str, &prev_token_type);
 
-    char* tmp = realloc(*str, (new_len + 1) * sizeof(char));
+    char *const tmp = realloc(*str, (new_len + 1) * sizeof(char));
     if (tmp == NULL) {
         free(new_str);
         return -1;
@@ -135,17 +136,18 @@ int insert_mul(char** str, int len) {
     return new_len;
 }
 
-int process_tokens(char** str, char* new_str, TokenType* prev_token_type) {
+int process_tokens(char const **const str, char *const new_str,
+                   TokenType *const prev_token_type) {
     int i = 0;
     int j = 0;
     while ((*str)[i] != '\0') {
-        char curr = (*str)[i];
-        TokenType current_type = get_token_type(curr);
-        copy_token(str, &i, new_str, &j, current_type);
+        char const curr = (*str)[i];
+        TokenType const current_type = get_token_type(curr);
+        copy_token((char const **const)str, &i, new_str, &j, current_type);
         *prev_token_type = current_type;
         if ((*str)[i] != '\0') {
-            char next = (*str)[i];
-            TokenType next_type = get_token_type(next);
+            char const next = (*str)[i];
+            TokenType const next_type = get_token_type(next);
             if (should_insert_mul(*prev_token_type, next_type)) {
                 new_str[j++] = '*';
             }
@@ -155,7 +157,7 @@ int process_tokens(char** str, char* new_str, TokenType* prev_token_type) {
     return j;
 }
 
-TokenType get_token_type(char c) {
+TokenType get_token_type(char const c) {
     if (isDigit(c) || c == '.') {
         return TOKEN_NUMBER;
     } else if (c == 'x') {
@@ -171,7 +173,8 @@ TokenType get_token_type(char c) {
     }
 }
 
-void copy_token(char** src, int* i, char* dest, int* j, TokenType token_type) {
+void copy_token(char const **const src, int *const i, char *const dest,
+                int *const j, TokenType const token_type) {
     if (token_type == TOKEN_NUMBER) {
         while (isDigit((*src)[*i]) || (*src)[*i] == '.') {
             dest[(*j)++] = (*src)[(*i)++];
@@ -190,7 +193,7 @@ void copy_token(char** src, int* i, char* dest, int* j, TokenType token_type) {
     }
 }
 
-int should_insert_mul(TokenType prev, TokenType next) {
+int should_insert_mul(TokenType const prev, TokenType const next) {
     // Insert '*' between:
     // - Number, variable, closing parenthesis, or function
     // followed by
@@ -208,7 +211,7 @@ int should_insert_mul(TokenType prev, TokenType next) {
     return 0;
 }
 
-void input_err(int err_code) {
+void input_err(int const err_code) {
     switch (err_code) {
         case 0:
             printf("ERROR!\nError code: 0 [String is empty]\n");

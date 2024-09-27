@@ -1,6 +1,6 @@
 #include "plot_graph.h"
 
-void plot_graph(const char *postfixExpression) {
+int plot_graph(const char *postfixExpression) {
     int x_min = -20, x_max = 20;
     int y_min = -10, y_max = 10;
 
@@ -18,6 +18,8 @@ void plot_graph(const char *postfixExpression) {
     printf("y: [%d; %d]\n", y_min, y_max);
 
     free(points);
+
+    return 1;
 }
 
 int evaluate_postfix_expression(const char *postfixExpression, double x_value,

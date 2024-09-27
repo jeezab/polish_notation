@@ -17,18 +17,20 @@ typedef enum {
     TOKEN_OTHER
 } TokenType;
 
-int input_expr(char** str);
+int input_expr(char **const str);
 
-int space_clear(char** str, int len);
-int copy_characters(char** str, char* new_str);
-int should_remove_space(char prev, char current, char next);
+int space_clear(char **const str, int const len);
+int copy_characters(char const **const str, char *const new_str);
+int should_remove_space(char const prev, char const current, char const next);
 
-int insert_mul(char** str, int len);
-int process_tokens(char** str, char* new_str, TokenType* prev_token_type);
-TokenType get_token_type(char c);
-void copy_token(char** src, int* i, char* dest, int* j, TokenType token_type);
-int should_insert_mul(TokenType prev, TokenType next);
+int insert_mul(char **const str, int const len);
+int process_tokens(char const **const str, char *const new_str,
+                   TokenType *const prev_token_type);
+TokenType get_token_type(char const c);
+void copy_token(char const **const src, int *const i, char *const dest,
+                int *const j, TokenType const token_type);
+int should_insert_mul(TokenType const prev, TokenType const next);
 
-void input_err(int err_code);
+void input_err(int const err_code);
 
-#endif
+#endif  // INPUT_EXPR_H

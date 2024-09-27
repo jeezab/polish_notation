@@ -18,7 +18,7 @@ typedef struct {
     double y_value;
 } Point;
 
-void plot_graph(const char* postfixExpression);
+int plot_graph(const char* postfixExpression);
 int evaluate_postfix_expression(const char* postfixExpression, double x_value,
                                 double* result);
 Point* gen_points(const char* postfixExpression, int x_min, int x_max,

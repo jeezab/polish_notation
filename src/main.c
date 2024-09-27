@@ -6,53 +6,59 @@
 #include "./input/input_expr.h"
 #include "./polish_calc/polish_calc.h"
 
-int general();
-char* read_and_preprocess_input(int* out_len);
+typedef enum {
+    SUCCESS = 0,
+    ERR_INPUT = 1,
+    ERR_PREPROCESS = 2,
+    ERR_CONVERSION = 3,
+    ERR_PLOTTING = 4
+} ErrorCode;
+
+ErrorCode process_expression();
+char* read_and_preprocess_input();
 char* convert_expression_to_postfix(const char* str);
-void plot_postfix(const char* postfixExpression);
+ErrorCode plot_postfix(const char* postfixExpression);
 
 int main() {
-    int err = 0;
+    ErrorCode status = process_expression();
 
-    err = general();
+    if (status != SUCCESS) {
+        fprintf(stderr, "Program terminated with error code: %d\n", status);
+    }
 
-    return err;
+    return status;
 }
 
-int general() {
-    char* input_str = read_and_preprocess_input(NULL);
+ErrorCode process_expression() {
+    char* input_str = read_and_preprocess_input();
     if (input_str == NULL) {
-        return 1;
+        return ERR_INPUT;
     }
 
     char* postfixExpression = convert_expression_to_postfix(input_str);
     if (postfixExpression == NULL) {
-        return 1;
+        free(input_str);
+        return ERR_CONVERSION;
     }
+
     printf("Postfix: %s\n", postfixExpression);
     free(input_str);
 
-    plot_postfix(postfixExpression);
-
+    ErrorCode plot_status = plot_postfix(postfixExpression);
     free(postfixExpression);
-    return 0;
+
+    if (plot_status != SUCCESS) {
+        return plot_status;
+    }
+
+    return SUCCESS;
 }
 
-char* read_and_preprocess_input(int* out_len) {
+char* read_and_preprocess_input() {
     char* str = NULL;
     int len = input_expr(&str);
 
-    if (len <= 0) {
-        input_err(len);
-        return NULL;
-    }
-
     len = space_clear(&str, len);
-    if (len <= 0) {
-        input_err(len);
-        free(str);
-        return NULL;
-    }
 
     len = insert_mul(&str, len);
     if (len <= 0) {
@@ -62,32 +68,37 @@ char* read_and_preprocess_input(int* out_len) {
     }
 
     printf("Input: %s\n", str);
-
-    if (out_len) {
-        *out_len = len;
-    }
-
     return str;
 }
 
 char* convert_expression_to_postfix(const char* str) {
     if (str == NULL) {
+        fprintf(
+            stderr,
+            "Error: NULL string provided to convert_expression_to_postfix.\n");
         return NULL;
     }
 
     char* postfixExpression = infix_to_postfix(str);
     if (postfixExpression == NULL) {
-        printf("Error: Failed to convert infix expression to postfix!\n");
-        return NULL;
+        fprintf(stderr,
+                "Error: Failed to convert infix expression to postfix.\n");
     }
 
     return postfixExpression;
 }
 
-void plot_postfix(const char* postfixExpression) {
+ErrorCode plot_postfix(const char* postfixExpression) {
     if (postfixExpression == NULL) {
-        return;
+        fprintf(stderr,
+                "Error: NULL postfix expression provided to plot_postfix.\n");
+        return ERR_PLOTTING;
     }
 
-    plot_graph(postfixExpression);
+    if (!plot_graph(postfixExpression)) {
+        fprintf(stderr, "Error: Failed to plot the postfix expression.\n");
+        return ERR_PLOTTING;
+    }
+
+    return SUCCESS;
 }
