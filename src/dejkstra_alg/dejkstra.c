@@ -1,26 +1,26 @@
 #include "dejkstra.h"
 
-char* infix_to_postfix(const char* infix) {
-    char* modified_infix = replace_unary_minus(infix);
+char *infix_to_postfix(const char *const infix) {
+    const char *const modified_infix = replace_unary_minus(infix);
     if (!modified_infix) return NULL;
 
     if (!check_expression(infix, modified_infix)) {
-        free(modified_infix);
+        free((void *)modified_infix);
         return NULL;
     }
 
-    char* postfix = do_postfix_convert(modified_infix);
+    const char *const postfix = do_postfix_convert(modified_infix);
 
-    free(modified_infix);
-    return postfix;
+    free((void *)modified_infix);
+    return (char *const)postfix;
 }
 
-char* do_postfix_convert(const char* modified_infix) {
+char *do_postfix_convert(const char *const modified_infix) {
     Stack_int operator_stack;
     initStack_int(&operator_stack);
 
-    int length = strlen(modified_infix);
-    char* postfix = (char*)malloc(4 * length * sizeof(char));
+    const int length = strlen(modified_infix);
+    char *const postfix = (char *)malloc(4 * length * sizeof(char));
     if (!postfix) {
         return NULL;
     }
@@ -50,7 +50,8 @@ char* do_postfix_convert(const char* modified_infix) {
     return postfix;
 }
 
-char* parse_digits(const char* expression, int* i, char* postfix, int* j) {
+char *parse_digits(const char *const expression, int *const i,
+                   char *const postfix, int *const j) {
     while (isDigit(expression[*i]) || expression[*i] == '.') {
         postfix[(*j)++] = expression[*i];
         (*i)++;
@@ -59,8 +60,9 @@ char* parse_digits(const char* expression, int* i, char* postfix, int* j) {
     return postfix;
 }
 
-char* parse_letter(const char* modified_infix, int* i, char* postfix, int* j,
-                   Stack_int* operator_stack) {
+char *parse_letter(const char *const modified_infix, int *const i,
+                   char *const postfix, int *const j,
+                   Stack_int *const operator_stack) {
     char name[10];
     int k = 0;
 
@@ -72,7 +74,7 @@ char* parse_letter(const char* modified_infix, int* i, char* postfix, int* j,
     }
     name[k] = '\0';
 
-    int func_code = get_function_code(name);
+    const int func_code = get_function_code(name);
     if (func_code != -1) {
         push_int(operator_stack, func_code);
     } else {
@@ -85,28 +87,29 @@ char* parse_letter(const char* modified_infix, int* i, char* postfix, int* j,
     return postfix;
 }
 
-void parse_operator_parentheses(const char* modified_infix, int* i,
-                                char* postfix, int* j,
-                                Stack_int* operator_stack) {
+void parse_operator_parentheses(const char *const modified_infix, int *const i,
+                                char *const postfix, int *const j,
+                                Stack_int *const operator_stack) {
     handle_operator_and_parentheses(operator_stack, modified_infix[*i], postfix,
                                     j);
     (*i)++;
 }
 
-void handle_operator_and_parentheses(Stack_int* operator_stack, char token,
-                                     char* postfix, int* j) {
+void handle_operator_and_parentheses(Stack_int *const operator_stack,
+                                     const char token, char *const postfix,
+                                     int *const j) {
     if (token == '(') {
         push_int(operator_stack, '(');
     } else if (token == ')') {
         pop_until_left_paren(operator_stack, postfix, j);
     } else {
         while (!isEmpty_int(operator_stack)) {
-            int top_op = operator_stack->top->data;
+            const int top_op = operator_stack->top->data;
             if (is_function_token(top_op) || isOperator((char)top_op)) {
                 if ((precedence(top_op) > precedence(token)) ||
                     (precedence(top_op) == precedence(token) &&
                      is_left_associative(top_op))) {
-                    int op = pop_int(operator_stack);
+                    const int op = pop_int(operator_stack);
                     append_operator_or_function(op, postfix, j);
                 } else {
                     break;
@@ -119,16 +122,18 @@ void handle_operator_and_parentheses(Stack_int* operator_stack, char token,
     }
 }
 
-void pop_until_empty(Stack_int* operator_stack, char* postfix, int* j) {
+void pop_until_empty(Stack_int *const operator_stack, char *const postfix,
+                     int *const j) {
     while (!isEmpty_int(operator_stack)) {
-        int op = pop_int(operator_stack);
+        const int op = pop_int(operator_stack);
         append_operator_or_function(op, postfix, j);
     }
 }
 
-void pop_until_left_paren(Stack_int* operator_stack, char* postfix, int* j) {
+void pop_until_left_paren(Stack_int *const operator_stack, char *const postfix,
+                          int *const j) {
     while (!isEmpty_int(operator_stack) && operator_stack->top->data != '(') {
-        int op = pop_int(operator_stack);
+        const int op = pop_int(operator_stack);
         append_operator_or_function(op, postfix, j);
     }
     if (!isEmpty_int(operator_stack)) {
@@ -136,9 +141,10 @@ void pop_until_left_paren(Stack_int* operator_stack, char* postfix, int* j) {
     }
 }
 
-void append_operator_or_function(int op, char* postfix, int* j) {
+void append_operator_or_function(const int op, char *const postfix,
+                                 int *const j) {
     if (is_function_token(op)) {
-        const char* func_name = get_function_name(op);
+        const char *const func_name = get_function_name(op);
         if (func_name) {
             strcpy(&postfix[*j], func_name);
             *j += strlen(func_name);
@@ -150,12 +156,12 @@ void append_operator_or_function(int op, char* postfix, int* j) {
     }
 }
 
-char* replace_unary_minus(const char* expression) {
-    int length = strlen(expression);
-    char* new_expression = (char*)malloc(2 * length * sizeof(char));
+char *replace_unary_minus(const char *const expression) {
+    const int length = strlen(expression);
+    char *const new_expression = (char *)malloc(2 * length * sizeof(char));
 
     if (!new_expression) {
-        printf("Memory allocation failed! [replaceUnaryMinus()]\n");
+        fprintf(stderr, "Memory allocation failed! [replaceUnaryMinus()]\n");
         return NULL;
     }
 
@@ -183,11 +189,12 @@ char* replace_unary_minus(const char* expression) {
     return new_expression;
 }
 
-int is_unary_minus(const char* expression, int i, int expect_operand) {
+int is_unary_minus(const char *const expression, const int i,
+                   const int expect_operand) {
     return (expression[i] == '-') && expect_operand;
 }
 
-int is_expecting_operand(char token) {
+int is_expecting_operand(const char token) {
     if (isOperator(token) || token == '(' || token == ',') {
         return 1;
     } else if (isDigit(token) || isLetter(token) || token == 'x' ||
@@ -197,7 +204,7 @@ int is_expecting_operand(char token) {
     return 1;
 }
 
-int precedence(int op) {
+int precedence(const int op) {
     if (is_function_token(op)) {
         return 5;
     }
@@ -217,6 +224,6 @@ int precedence(int op) {
     }
 }
 
-int is_left_associative(int op) {
+int is_left_associative(const int op) {
     return (op == OP_POWER || op == OP_UNARY_MINUS) ? 0 : 1;
 }

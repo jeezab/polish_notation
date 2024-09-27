@@ -9,30 +9,35 @@
 #include "../whotype/whotype.h"
 #include "./expr_logic_check.h"
 
-char* infix_to_postfix(const char* infix);
+char *infix_to_postfix(const char *const infix);
 
-char* do_postfix_convert(const char* modified_infix);
-char* parse_digits(const char* expression, int* i, char* postfix, int* j);
-char* parse_letter(const char* modified_infix, int* i, char* postfix, int* j,
-                   Stack_int* operator_stack);
-void parse_operator_parentheses(const char* modified_infix, int* i,
-                                char* postfix, int* j,
-                                Stack_int* operator_stack);
+char *do_postfix_convert(const char *const modified_infix);
+char *parse_digits(const char *const expression, int *const i,
+                   char *const postfix, int *const j);
+char *parse_letter(const char *const modified_infix, int *const i,
+                   char *const postfix, int *const j,
+                   Stack_int *const operator_stack);
+void parse_operator_parentheses(const char *const modified_infix, int *const i,
+                                char *const postfix, int *const j,
+                                Stack_int *const operator_stack);
 
-void handle_operator_and_parentheses(Stack_int* operator_stack, char token,
-                                     char* postfix, int* j);
-void pop_until_empty(Stack_int* operator_stack, char* postfix, int* j);
-void pop_until_left_paren(Stack_int* operator_stack, char* postfix, int* j);
-void append_operator_or_function(int op, char* postfix, int* j);
+void handle_operator_and_parentheses(Stack_int *const operator_stack,
+                                     const char token, char *const postfix,
+                                     int *const j);
+void pop_until_empty(Stack_int *const operator_stack, char *const postfix,
+                     int *const j);
+void pop_until_left_paren(Stack_int *const operator_stack, char *const postfix,
+                          int *const j);
+void append_operator_or_function(const int op, char *const postfix,
+                                 int *const j);
 
-char* replace_unary_minus(const char* expression);
-int is_unary_minus(const char* expression, int i, int expect_operand);
-int is_expecting_operand(char token);
+char *replace_unary_minus(const char *const expression);
+int is_unary_minus(const char *const expression, const int i,
+                   const int expect_operand);
+int is_expecting_operand(const char token);
 
-int get_function_code(const char* func_name);
-const char* get_function_name(int code);
-int is_function_token(int code);
-int precedence(int op);
-int is_left_associative(int op);
+char *get_function_name(const int code);
+int precedence(const int op);
+int is_left_associative(const int op);
 
 #endif /* DEJKSTRA_H */

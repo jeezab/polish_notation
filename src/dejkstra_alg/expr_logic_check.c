@@ -4,10 +4,13 @@
  * return 1 if correct
  * return 0 if incorrect
  */
-int check_expression(const char* original_expression,
-                     const char* modified_expression) {
-    int balance = 0, i = 0, operand_count = 0, operator_found = 0,
-        expect_operand = 1;
+int check_expression(char const *const original_expression,
+                     char const *const modified_expression) {
+    int balance = 0;
+    int i = 0;
+    int operand_count = 0;
+    int operator_found = 0;
+    int expect_operand = 1;
 
     while (modified_expression[i] != '\0') {
         if (isSpace(modified_expression[i])) {
@@ -48,9 +51,9 @@ int check_expression(const char* original_expression,
                       original_expression);
 }
 
-int process_digit(const char* original_expression,
-                  const char* modified_expression, int* i, int* operand_count,
-                  int* expect_operand) {
+int process_digit(char const *const original_expression,
+                  char const *const modified_expression, int *const i,
+                  int *const operand_count, int *const expect_operand) {
     if (!*expect_operand) {
         print_error(original_expression, *i, "Unexpected operand");
         return 0;
@@ -60,9 +63,9 @@ int process_digit(const char* original_expression,
     return 1;
 }
 
-int process_operator(const char* original_expression,
-                     const char* modified_expression, int* i,
-                     int* operator_found, int* expect_operand) {
+int process_operator(char const *const original_expression,
+                     char const *const modified_expression, int *const i,
+                     int *const operator_found, int *const expect_operand) {
     if (!handle_operator(modified_expression[*i], operator_found,
                          expect_operand)) {
         print_error(original_expression, *i, "Unexpected operator");
@@ -72,9 +75,10 @@ int process_operator(const char* original_expression,
     return 1;
 }
 
-int process_letter(const char* original_expression,
-                   const char* modified_expression, int* i, int* operator_found,
-                   int* expect_operand, int* operand_count) {
+int process_letter(char const *const original_expression,
+                   char const *const modified_expression, int *const i,
+                   int *const operator_found, int *const expect_operand,
+                   int *const operand_count) {
     int letter_check =
         handle_letter(modified_expression, original_expression, i,
                       operator_found, expect_operand, operand_count);
@@ -84,9 +88,9 @@ int process_letter(const char* original_expression,
     return 1;
 }
 
-int process_parentheses(const char* original_expression,
-                        const char* modified_expression, int* i, int* balance,
-                        int* expect_operand) {
+int process_parentheses(char const *const original_expression,
+                        char const *const modified_expression, int *const i,
+                        int *const balance, int *const expect_operand) {
     if (!handle_parentheses(modified_expression[*i], balance, expect_operand)) {
         print_error(original_expression, *i, "Mismatched parentheses");
         return 0;
@@ -95,7 +99,8 @@ int process_parentheses(const char* original_expression,
     return 1;
 }
 
-int handle_operator(char token, int* operator_found, int* expect_operand) {
+int handle_operator(char const token, int *const operator_found,
+                    int *const expect_operand) {
     if ((*expect_operand) && token != OP_UNARY_MINUS) {
         return 0;
     }
@@ -104,7 +109,8 @@ int handle_operator(char token, int* operator_found, int* expect_operand) {
     return 1;
 }
 
-int handle_operand(const char* expression, int* i, int* operand_count) {
+int handle_operand(char const *const expression, int *const i,
+                   int *const operand_count) {
     (*operand_count)++;
     while (isDigit(expression[*i]) || expression[*i] == '.') {
         (*i)++;
@@ -112,7 +118,8 @@ int handle_operand(const char* expression, int* i, int* operand_count) {
     return 0;
 }
 
-int handle_parentheses(char token, int* balance, int* expect_operand) {
+int handle_parentheses(char const token, int *const balance,
+                       int *const expect_operand) {
     if (token == '(') {
         (*balance)++;
         *expect_operand = 1;
@@ -123,9 +130,10 @@ int handle_parentheses(char token, int* balance, int* expect_operand) {
     return (*balance >= 0);
 }
 
-int handle_letter(const char* modified_expression,
-                  const char* original_expression, int* i, int* operator_found,
-                  int* expect_operand, int* operand_count) {
+int handle_letter(char const *const modified_expression,
+                  char const *const original_expression, int *const i,
+                  int *const operator_found, int *const expect_operand,
+                  int *const operand_count) {
     char name[10];
     int k = 0;
     int start_pos = (*i);
@@ -164,8 +172,8 @@ int handle_letter(const char* modified_expression,
     return 1;
 }
 
-int last_check(int balance, int expect_operand, int operand_count,
-               const char* original_expression) {
+int last_check(int const balance, int const expect_operand,
+               int const operand_count, char const *const original_expression) {
     if (balance != 0) {
         print_error(original_expression, strlen(original_expression),
                     "Mismatched parentheses");
@@ -183,7 +191,7 @@ int last_check(int balance, int expect_operand, int operand_count,
     return 1;
 }
 
-int get_function_code(const char* func_name) {
+int get_function_code(char const *const func_name) {
     if (strcmp(func_name, "sin") == 0) return FUNC_SIN;
     if (strcmp(func_name, "cos") == 0) return FUNC_COS;
     if (strcmp(func_name, "tg") == 0 || strcmp(func_name, "tan") == 0)
@@ -194,9 +202,11 @@ int get_function_code(const char* func_name) {
     return -1;  // func name error
 }
 
-int is_function_token(int code) { return code >= FUNC_SIN && code <= FUNC_LN; }
+int is_function_token(int const code) {
+    return code >= FUNC_SIN && code <= FUNC_LN;
+}
 
-const char* get_function_name(int code) {
+char *get_function_name(int const code) {
     switch (code) {
         case FUNC_SIN:
             return "sin";
@@ -215,11 +225,12 @@ const char* get_function_name(int code) {
     }
 }
 
-void print_error(const char* expression, int error_pos, const char* message) {
-    printf("Error: %s at position %d\n", message, error_pos);
-    printf("%s\n", expression);
+void print_error(char const *const expression, int const error_pos,
+                 char const *const message) {
+    fprintf(stderr, "Error: %s at position %d\n", message, error_pos);
+    fprintf(stderr, "%s\n", expression);
     for (int pos = 0; pos < error_pos; pos++) {
-        printf("-");
+        fprintf(stderr, "-");
     }
-    printf("^\n");
+    fprintf(stderr, "^\n");
 }
