@@ -237,12 +237,12 @@ Let's consider the algorithm's operation using the expression `-2*ln(x)/(4*-2*si
 
    **Original Expression:**
    ```
-   -2ln(x)/(4-2sin(5x))
+   -2*ln(x)/(4*-2*sin(5*x))
    ```
 
    **Modified Expression:**
    ```
-   ~2ln(x)/(4~2sin(5x))
+   ~2*ln(x)/(4*~2*sin(5*x))
    ```
 
 2. **Step-by-Step Parsing:**
