@@ -1,13 +1,14 @@
-#include "./polish_calc.h"
+#include "polish_calc.h"
 
-int polish_calc(const char* postfix, double* result) {
+int polish_calc(char const *const postfix, double *const result) {
     int error_code = ERROR_NONE;
     Stack_double operandStack;
     initStack_double(&operandStack);
 
-    char* expr_copy = (char*)malloc((strlen(postfix) + 1) * sizeof(char));
+    char *const expr_copy =
+        (char *)malloc((strlen(postfix) + 1) * sizeof(char));
     strcpy(expr_copy, postfix);
-    const char* token = strtok(expr_copy, " ");
+    char const *token = strtok(expr_copy, " ");
 
     while (token != NULL && error_code == ERROR_NONE) {
         if (isDigit(token[0])) {
@@ -51,7 +52,8 @@ int polish_calc(const char* postfix, double* result) {
 }
 
 // function to apply binary ops
-int apply_operator(int op, double operand1, double operand2, double* result) {
+int apply_operator(int const op, double const operand1, double const operand2,
+                   double *const result) {
     switch (op) {
         case OP_PLUS:
             *result = operand1 + operand2;
@@ -77,7 +79,7 @@ int apply_operator(int op, double operand1, double operand2, double* result) {
 }
 
 // function to apply unary funcs
-int apply_function(int func, double operand, double* result) {
+int apply_function(int const func, double const operand, double *const result) {
     switch (func) {
         case FUNC_SIN:
             *result = sin(operand);
@@ -108,28 +110,28 @@ int apply_function(int func, double operand, double* result) {
     }
 }
 
-int print_error_calc(int error_code) {
+int print_error_calc(int const error_code) {
     switch (error_code) {
         case ERROR_NONE:
-            printf("Calculation succeeded.\n");
+            fprintf(stderr, "Calculation succeeded.\n");
             break;
         case ERROR_DIVISION_BY_ZERO:
-            printf("Error: Division by zero\n");
+            fprintf(stderr, "Error: Division by zero\n");
             break;
         case ERROR_NEGATIVE_SQRT:
-            printf("Error: Negative input for sqrt\n");
+            fprintf(stderr, "Error: Negative input for sqrt\n");
             break;
         case ERROR_NONPOSITIVE_LN:
-            printf("Error: Non-positive input for ln\n");
+            fprintf(stderr, "Error: Non-positive input for ln\n");
             break;
         case ERROR_UNKNOWN_OPERATOR:
-            printf("Error: Unknown operator\n");
+            fprintf(stderr, "Error: Unknown operator\n");
             break;
         case ERROR_UNKNOWN_FUNCTION:
-            printf("Error: Unknown function\n");
+            fprintf(stderr, "Error: Unknown function\n");
             break;
         default:
-            printf("Error: Unknown error occurred\n");
+            fprintf(stderr, "Error: Unknown error occurred\n");
             break;
     }
     return error_code;

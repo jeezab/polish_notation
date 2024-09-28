@@ -16,10 +16,11 @@
 #define ERROR_UNKNOWN_OPERATOR -4
 #define ERROR_UNKNOWN_FUNCTION -5
 
-int polish_calc(const char* postfix, double* result);
-int apply_operator(int op, double operand1, double operand2, double* result);
-int apply_function(int func, double operand, double* result);
+int polish_calc(char const *const postfix, double *const result);
+int apply_operator(int const op, double const operand1, double const operand2,
+                   double *const result);
+int apply_function(int const func, double const operand, double *const result);
 
-int print_error_calc(int error_code);
+int print_error_calc(int const error_code);
 
 #endif  // POLISH_CALC
