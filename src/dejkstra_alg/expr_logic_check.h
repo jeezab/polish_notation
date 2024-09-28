@@ -56,4 +56,4 @@ int is_function_token(int const code);
 void print_error(char const *const expression, int const error_pos,
                  char const *const message);
 
-#endif  // EXPR_LOGIC_CHECK_H
+#endif // EXPR_LOGIC_CHECK_H

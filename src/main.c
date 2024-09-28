@@ -16,8 +16,8 @@ typedef enum {
 
 ErrorCode process_expression();
 char *read_and_preprocess_input();
-char *convert_expression_to_postfix(const char* str);
-ErrorCode plot_postfix(const char* postfixExpression);
+char *convert_expression_to_postfix(char const *str);
+ErrorCode plot_postfix(char const *postfixExpression);
 
 int main() {
     ErrorCode status = process_expression();
@@ -55,7 +55,7 @@ ErrorCode process_expression() {
 }
 
 char *read_and_preprocess_input() {
-    char* str = NULL;
+    char *str = NULL;
     int len = input_expr(&str);
 
     len = space_clear(&str, len);
@@ -71,7 +71,7 @@ char *read_and_preprocess_input() {
     return str;
 }
 
-char *convert_expression_to_postfix(const char* str) {
+char *convert_expression_to_postfix(char const *str) {
     if (str == NULL) {
         fprintf(
             stderr,
@@ -79,7 +79,7 @@ char *convert_expression_to_postfix(const char* str) {
         return NULL;
     }
 
-    char* postfixExpression = infix_to_postfix(str);
+    char *postfixExpression = infix_to_postfix(str);
     if (postfixExpression == NULL) {
         fprintf(stderr,
                 "Error: Failed to convert infix expression to postfix.\n");
@@ -88,7 +88,7 @@ char *convert_expression_to_postfix(const char* str) {
     return postfixExpression;
 }
 
-ErrorCode plot_postfix(const char* postfixExpression) {
+ErrorCode plot_postfix(char const *const postfixExpression) {
     if (postfixExpression == NULL) {
         fprintf(stderr,
                 "Error: NULL postfix expression provided to plot_postfix.\n");

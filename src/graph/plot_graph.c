@@ -153,7 +153,7 @@ char *replace_character(char const *const src, char const target,
         return NULL;
     }
 
-    const char *s = src;
+    char const *s = src;
     char *d = new_str;
 
     while (*s) {

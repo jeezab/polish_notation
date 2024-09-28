@@ -55,84 +55,84 @@ int polish_calc(char const *const postfix, double *const result) {
 int apply_operator(int const op, double const operand1, double const operand2,
                    double *const result) {
     switch (op) {
-        case OP_PLUS:
-            *result = operand1 + operand2;
-            return ERROR_NONE;
-        case OP_MINUS:
-            *result = operand1 - operand2;
-            return ERROR_NONE;
-        case OP_MULTIPLY:
-            *result = operand1 * operand2;
-            return ERROR_NONE;
-        case OP_DIVIDE:
-            if (operand2 == 0) {
-                return ERROR_DIVISION_BY_ZERO;
-            }
-            *result = operand1 / operand2;
-            return ERROR_NONE;
-        case OP_POWER:
-            *result = pow(operand1, operand2);
-            return ERROR_NONE;
-        default:
-            return ERROR_UNKNOWN_OPERATOR;
+    case OP_PLUS:
+        *result = operand1 + operand2;
+        return ERROR_NONE;
+    case OP_MINUS:
+        *result = operand1 - operand2;
+        return ERROR_NONE;
+    case OP_MULTIPLY:
+        *result = operand1 * operand2;
+        return ERROR_NONE;
+    case OP_DIVIDE:
+        if (operand2 == 0) {
+            return ERROR_DIVISION_BY_ZERO;
+        }
+        *result = operand1 / operand2;
+        return ERROR_NONE;
+    case OP_POWER:
+        *result = pow(operand1, operand2);
+        return ERROR_NONE;
+    default:
+        return ERROR_UNKNOWN_OPERATOR;
     }
 }
 
 // function to apply unary funcs
 int apply_function(int const func, double const operand, double *const result) {
     switch (func) {
-        case FUNC_SIN:
-            *result = sin(operand);
-            return ERROR_NONE;
-        case FUNC_COS:
-            *result = cos(operand);
-            return ERROR_NONE;
-        case FUNC_TAN:
-            *result = tan(operand);
-            return ERROR_NONE;
-        case FUNC_COT:
-            *result = 1.0 / tan(operand);
-            return ERROR_NONE;
-        case FUNC_SQRT:
-            if (operand < 0) {
-                return ERROR_NEGATIVE_SQRT;
-            }
-            *result = sqrt(operand);
-            return ERROR_NONE;
-        case FUNC_LN:
-            if (operand <= 0) {
-                return ERROR_NONPOSITIVE_LN;
-            }
-            *result = log(operand);
-            return ERROR_NONE;
-        default:
-            return ERROR_UNKNOWN_FUNCTION;
+    case FUNC_SIN:
+        *result = sin(operand);
+        return ERROR_NONE;
+    case FUNC_COS:
+        *result = cos(operand);
+        return ERROR_NONE;
+    case FUNC_TAN:
+        *result = tan(operand);
+        return ERROR_NONE;
+    case FUNC_COT:
+        *result = 1.0 / tan(operand);
+        return ERROR_NONE;
+    case FUNC_SQRT:
+        if (operand < 0) {
+            return ERROR_NEGATIVE_SQRT;
+        }
+        *result = sqrt(operand);
+        return ERROR_NONE;
+    case FUNC_LN:
+        if (operand <= 0) {
+            return ERROR_NONPOSITIVE_LN;
+        }
+        *result = log(operand);
+        return ERROR_NONE;
+    default:
+        return ERROR_UNKNOWN_FUNCTION;
     }
 }
 
 int print_error_calc(int const error_code) {
     switch (error_code) {
-        case ERROR_NONE:
-            fprintf(stderr, "Calculation succeeded.\n");
-            break;
-        case ERROR_DIVISION_BY_ZERO:
-            fprintf(stderr, "Error: Division by zero\n");
-            break;
-        case ERROR_NEGATIVE_SQRT:
-            fprintf(stderr, "Error: Negative input for sqrt\n");
-            break;
-        case ERROR_NONPOSITIVE_LN:
-            fprintf(stderr, "Error: Non-positive input for ln\n");
-            break;
-        case ERROR_UNKNOWN_OPERATOR:
-            fprintf(stderr, "Error: Unknown operator\n");
-            break;
-        case ERROR_UNKNOWN_FUNCTION:
-            fprintf(stderr, "Error: Unknown function\n");
-            break;
-        default:
-            fprintf(stderr, "Error: Unknown error occurred\n");
-            break;
+    case ERROR_NONE:
+        fprintf(stderr, "Calculation succeeded.\n");
+        break;
+    case ERROR_DIVISION_BY_ZERO:
+        fprintf(stderr, "Error: Division by zero\n");
+        break;
+    case ERROR_NEGATIVE_SQRT:
+        fprintf(stderr, "Error: Negative input for sqrt\n");
+        break;
+    case ERROR_NONPOSITIVE_LN:
+        fprintf(stderr, "Error: Non-positive input for ln\n");
+        break;
+    case ERROR_UNKNOWN_OPERATOR:
+        fprintf(stderr, "Error: Unknown operator\n");
+        break;
+    case ERROR_UNKNOWN_FUNCTION:
+        fprintf(stderr, "Error: Unknown function\n");
+        break;
+    default:
+        fprintf(stderr, "Error: Unknown error occurred\n");
+        break;
     }
     return error_code;
 }

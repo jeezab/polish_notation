@@ -33,4 +33,4 @@ int should_insert_mul(TokenType const prev, TokenType const next);
 
 void input_err(int const err_code);
 
-#endif  // INPUT_EXPR_H
+#endif // INPUT_EXPR_H

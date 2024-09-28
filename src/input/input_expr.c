@@ -11,7 +11,7 @@
 int input_expr(char **const str) {
     *str = (char *)malloc(2 * sizeof(char));
     if (*str == NULL) {
-        return -1;  // memory alloc/realloc error
+        return -1; // memory alloc/realloc error
     }
 
     int s_len = 0;
@@ -23,7 +23,7 @@ int input_expr(char **const str) {
         char *const tmp = realloc(*str, (s_len + 1) * sizeof(char));
         if (tmp == NULL) {
             free(*str);
-            return -1;  // memory alloc/realloc error
+            return -1; // memory alloc/realloc error
         }
         *str = tmp;
         (*str)[s_len - 1] = inp;
@@ -213,14 +213,14 @@ int should_insert_mul(TokenType const prev, TokenType const next) {
 
 void input_err(int const err_code) {
     switch (err_code) {
-        case 0:
-            printf("ERROR!\nError code: 0 [String is empty]\n");
-            break;
-        case -1:
-            printf("ERROR!\nError code: -1 [Memory alloc/realloc failed]\n");
-            break;
-        default:
-            printf("ERROR!\nError code: unknown");
-            break;
+    case 0:
+        printf("ERROR!\nError code: 0 [String is empty]\n");
+        break;
+    case -1:
+        printf("ERROR!\nError code: -1 [Memory alloc/realloc failed]\n");
+        break;
+    default:
+        printf("ERROR!\nError code: unknown");
+        break;
     }
 }

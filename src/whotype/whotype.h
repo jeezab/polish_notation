@@ -7,4 +7,4 @@ int isLetter(char const c);
 int isSpace(char const c);
 int isOperator(char const c);
 
-#endif  // WHOTYPE_H
+#endif // WHOTYPE_H

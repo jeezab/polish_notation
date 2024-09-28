@@ -192,14 +192,19 @@ int last_check(int const balance, int const expect_operand,
 }
 
 int get_function_code(char const *const func_name) {
-    if (strcmp(func_name, "sin") == 0) return FUNC_SIN;
-    if (strcmp(func_name, "cos") == 0) return FUNC_COS;
+    if (strcmp(func_name, "sin") == 0)
+        return FUNC_SIN;
+    if (strcmp(func_name, "cos") == 0)
+        return FUNC_COS;
     if (strcmp(func_name, "tg") == 0 || strcmp(func_name, "tan") == 0)
         return FUNC_TAN;
-    if (strcmp(func_name, "ctg") == 0) return FUNC_COT;
-    if (strcmp(func_name, "sqrt") == 0) return FUNC_SQRT;
-    if (strcmp(func_name, "ln") == 0) return FUNC_LN;
-    return -1;  // func name error
+    if (strcmp(func_name, "ctg") == 0)
+        return FUNC_COT;
+    if (strcmp(func_name, "sqrt") == 0)
+        return FUNC_SQRT;
+    if (strcmp(func_name, "ln") == 0)
+        return FUNC_LN;
+    return -1; // func name error
 }
 
 int is_function_token(int const code) {
@@ -208,20 +213,20 @@ int is_function_token(int const code) {
 
 char *get_function_name(int const code) {
     switch (code) {
-        case FUNC_SIN:
-            return "sin";
-        case FUNC_COS:
-            return "cos";
-        case FUNC_TAN:
-            return "tan";
-        case FUNC_COT:
-            return "cot";
-        case FUNC_SQRT:
-            return "sqrt";
-        case FUNC_LN:
-            return "ln";
-        default:
-            return NULL;
+    case FUNC_SIN:
+        return "sin";
+    case FUNC_COS:
+        return "cos";
+    case FUNC_TAN:
+        return "tan";
+    case FUNC_COT:
+        return "cot";
+    case FUNC_SQRT:
+        return "sqrt";
+    case FUNC_LN:
+        return "ln";
+    default:
+        return NULL;
     }
 }
 

@@ -23,4 +23,4 @@ int apply_function(int const func, double const operand, double *const result);
 
 int print_error_calc(int const error_code);
 
-#endif  // POLISH_CALC
+#endif // POLISH_CALC

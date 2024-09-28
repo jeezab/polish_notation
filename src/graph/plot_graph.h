@@ -36,4 +36,4 @@ size_t calculate_new_length(char const *const str, int const count,
 int format_double(double const value, char *const buffer, size_t const size);
 int count_occurrences(char const *const str, char const target);
 
-#endif  // PLOT_GRAPH_H
+#endif // PLOT_GRAPH_H
