@@ -127,12 +127,14 @@ char *replace_x_with_value(char const *const str, double const value) {
     return replaced_str;
 }
 
+// replace 'target' characters with 'replacement' only if they are standalone
 char *replace_character(char const *const src, char const target,
                         char const *const replacement, int const is_negative) {
     if (src == NULL || replacement == NULL) {
         return NULL;
     }
 
+    // count only the 'x's that should be replaced
     int const count = count_occurrences(src, target);
     if (count == 0) {
         char *const copy_str = (char *)malloc(strlen(src) + 1);
@@ -155,20 +157,28 @@ char *replace_character(char const *const src, char const target,
 
     char const *s = src;
     char *d = new_str;
+    char prev_char = 0;
 
     while (*s) {
         if (*s == target) {
-            memcpy(d, replacement, replacement_length);
-            d += replacement_length;
-            s++;
+            char next_char = *(s + 1);
 
-            if (is_neg) {
-                memcpy(d, " ~", 2);
-                d += 2;
+            if (!isLetter(prev_char) && !isLetter(next_char)) {
+                memcpy(d, replacement, replacement_length);
+                d += replacement_length;
+                s++;
+
+                if (is_neg) {
+                    memcpy(d, " ~", 2);
+                    d += 2;
+                }
+
+                prev_char = 0;
+                continue;
             }
-        } else {
-            *d++ = *s++;
         }
+        *d++ = *s++;
+        prev_char = *(s - 1);
     }
 
     *d = '\0';
@@ -201,16 +211,24 @@ int format_double(double const value, char *const buffer, size_t const size) {
     return len;
 }
 
-int count_occurrences(char const *const str, char const target) {
+int count_occurrences(char const *str, char const target) {
     if (str == NULL) {
         return 0;
     }
 
     int count = 0;
-    for (char const *ptr = str; *ptr != '\0'; ptr++) {
-        if (*ptr == target) {
-            count++;
+    char prev = 0;
+    char current;
+    while ((current = *str) != '\0') {
+        if (current == target) {
+            char next = *(str + 1);
+            // check if 'x' is standalone
+            if (!isLetter(prev) && !isLetter(next)) {
+                count++;
+            }
         }
+        prev = current; // update previous character
+        str++;
     }
     return count;
 }

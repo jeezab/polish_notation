@@ -105,6 +105,9 @@ int apply_function(int const func, double const operand, double *const result) {
         }
         *result = log(operand);
         return ERROR_NONE;
+    case FUNC_EXP:
+        *result = exp(operand);
+        return ERROR_NONE;
     default:
         return ERROR_UNKNOWN_FUNCTION;
     }

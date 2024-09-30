@@ -19,6 +19,7 @@
 #define FUNC_COT 259
 #define FUNC_SQRT 260
 #define FUNC_LN 261
+#define FUNC_EXP 262
 
 int check_expression(char const *const original_expression,
                      char const *const modified_expression);

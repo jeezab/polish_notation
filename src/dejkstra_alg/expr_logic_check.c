@@ -204,11 +204,13 @@ int get_function_code(char const *const func_name) {
         return FUNC_SQRT;
     if (strcmp(func_name, "ln") == 0)
         return FUNC_LN;
+    if (strcmp(func_name, "exp") == 0)
+        return FUNC_EXP;
     return -1; // func name error
 }
 
 int is_function_token(int const code) {
-    return code >= FUNC_SIN && code <= FUNC_LN;
+    return code >= FUNC_SIN && code <= FUNC_EXP;
 }
 
 char *get_function_name(int const code) {
@@ -225,6 +227,8 @@ char *get_function_name(int const code) {
         return "sqrt";
     case FUNC_LN:
         return "ln";
+    case FUNC_EXP:
+        return "exp";
     default:
         return NULL;
     }
