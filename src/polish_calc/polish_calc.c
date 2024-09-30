@@ -5,8 +5,7 @@ int polish_calc(char const *const postfix, double *const result) {
     Stack_double operandStack;
     initStack_double(&operandStack);
 
-    char *const expr_copy =
-        (char *)malloc((strlen(postfix) + 1) * sizeof(char));
+    char *const expr_copy = (char *)malloc((strlen(postfix) + 1) * sizeof(char));
     if (!expr_copy) {
         fprintf(stderr, "Memory allocation failed! [polish_calc()]\n");
         destroyStack_double(&operandStack);
