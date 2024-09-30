@@ -5,8 +5,7 @@ int polish_calc(char const *const postfix, double *const result) {
     Stack_double operandStack;
     initStack_double(&operandStack);
 
-    char *const expr_copy =
-        (char *)malloc((strlen(postfix) + 1) * sizeof(char));
+    char *const expr_copy = (char *)malloc((strlen(postfix) + 1) * sizeof(char));
     if (!expr_copy) {
         fprintf(stderr, "Memory allocation failed! [polish_calc()]\n");
         destroyStack_double(&operandStack);
@@ -16,51 +15,7 @@ int polish_calc(char const *const postfix, double *const result) {
     char *token = strtok(expr_copy, " ");
 
     while (token != NULL && error_code == ERROR_NONE) {
-        if (isDigit(token[0]) || (token[0] == '.' && isDigit(token[1]))) {
-            push_double(&operandStack, atof(token));
-        } else if (strcmp(token, "~") == 0) {
-            if (isEmpty_double(&operandStack)) {
-                error_code = ERROR_UNKNOWN_OPERATOR;
-                break;
-            }
-            double operand = pop_double(&operandStack);
-            push_double(&operandStack, -operand);
-        } else if (isOperator(token[0]) && strlen(token) == 1) {
-            if (operandStack.top == NULL || operandStack.top->next == NULL) {
-                error_code = ERROR_UNKNOWN_OPERATOR;
-                break;
-            }
-            double operand2 = pop_double(&operandStack);
-            double operand1 = pop_double(&operandStack);
-            double temp_result;
-            error_code =
-                apply_operator(token[0], operand1, operand2, &temp_result);
-            if (error_code == ERROR_NONE) {
-                push_double(&operandStack, temp_result);
-            }
-        } else {
-            int func_code = get_function_code(token);
-            if (func_code != -1) {
-                if (isEmpty_double(&operandStack)) {
-                    error_code = ERROR_UNKNOWN_FUNCTION;
-                    break;
-                }
-                double operand = pop_double(&operandStack);
-                double temp_result;
-                error_code = apply_function(func_code, operand, &temp_result);
-                if (error_code == ERROR_NONE) {
-                    push_double(&operandStack, temp_result);
-                }
-            } else {
-                int const_code = get_constant_code(token);
-                if (const_code != -1) {
-                    double const_value = get_constant_value(const_code);
-                    push_double(&operandStack, const_value);
-                } else {
-                    error_code = ERROR_UNKNOWN_FUNCTION;
-                }
-            }
-        }
+        error_code = calc_process_token(&operandStack, token);
         token = strtok(NULL, " ");
     }
 
@@ -79,6 +34,83 @@ int polish_calc(char const *const postfix, double *const result) {
     destroyStack_double(&operandStack);
 
     return error_code;
+}
+
+int calc_process_operand(Stack_double *operandStack, char *token) {
+    if (isDigit(token[0]) || (token[0] == '.' && isDigit(token[1]))) {
+        push_double(operandStack, atof(token));
+        return ERROR_NONE;
+    }
+    return ERROR_UNKNOWN_OPERATOR;
+}
+
+int calc_process_operator(Stack_double *operandStack, char operator) {
+    if (operandStack->top == NULL || operandStack->top->next == NULL) {
+        return ERROR_UNKNOWN_OPERATOR;
+    }
+
+    double operand2 = pop_double(operandStack);
+    double operand1 = pop_double(operandStack);
+    double temp_result;
+    int error_code = apply_operator(operator, operand1, operand2, &temp_result);
+
+    if (error_code == ERROR_NONE) {
+        push_double(operandStack, temp_result);
+    }
+
+    return error_code;
+}
+
+int calc_process_function(Stack_double *operandStack, char *token) {
+    int func_code = get_function_code(token);
+
+    if (func_code != -1) {
+        if (isEmpty_double(operandStack)) {
+            return ERROR_UNKNOWN_FUNCTION;
+        }
+        double operand = pop_double(operandStack);
+        double temp_result;
+        int error_code = apply_function(func_code, operand, &temp_result);
+
+        if (error_code == ERROR_NONE) {
+            push_double(operandStack, temp_result);
+        }
+
+        return error_code;
+    }
+
+    return ERROR_UNKNOWN_FUNCTION;
+}
+
+int calc_process_constant(Stack_double *operandStack, char *token) {
+    int const_code = get_constant_code(token);
+    if (const_code != -1) {
+        double const_value = get_constant_value(const_code);
+        push_double(operandStack, const_value);
+        return ERROR_NONE;
+    }
+    return ERROR_UNKNOWN_FUNCTION;
+}
+
+int calc_process_token(Stack_double *operandStack, char *token) {
+    if (isDigit(token[0]) || (token[0] == '.' && isDigit(token[1]))) {
+        return calc_process_operand(operandStack, token);
+    } else if (strcmp(token, "~") == 0) {
+        if (isEmpty_double(operandStack)) {
+            return ERROR_UNKNOWN_OPERATOR;
+        }
+        double operand = pop_double(operandStack);
+        push_double(operandStack, -operand);
+        return ERROR_NONE;
+    } else if (isOperator(token[0]) && strlen(token) == 1) {
+        return calc_process_operator(operandStack, token[0]);
+    } else {
+        int error_code = calc_process_function(operandStack, token);
+        if (error_code == ERROR_UNKNOWN_FUNCTION) {
+            return calc_process_constant(operandStack, token);
+        }
+        return error_code;
+    }
 }
 
 int apply_operator(int const op, double const operand1, double const operand2,
