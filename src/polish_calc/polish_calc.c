@@ -5,14 +5,15 @@ int polish_calc(char const *const postfix, double *const result) {
     Stack_double operandStack;
     initStack_double(&operandStack);
 
-    char *const expr_copy = (char *)malloc((strlen(postfix) + 1) * sizeof(char));
+    char *const expr_copy =
+        (char *)malloc((strlen(postfix) + 1) * sizeof(char));
     if (!expr_copy) {
         fprintf(stderr, "Memory allocation failed! [polish_calc()]\n");
         destroyStack_double(&operandStack);
         return ERROR_MEMORY_ALLOC;
     }
     strcpy(expr_copy, postfix);
-    char *token = strtok(expr_copy, " ");
+    char const *token = strtok(expr_copy, " ");
 
     while (token != NULL && error_code == ERROR_NONE) {
         error_code = calc_process_token(&operandStack, token);
@@ -36,7 +37,7 @@ int polish_calc(char const *const postfix, double *const result) {
     return error_code;
 }
 
-int calc_process_operand(Stack_double *operandStack, char *token) {
+int calc_process_operand(Stack_double *operandStack, char const *const token) {
     if (isDigit(token[0]) || (token[0] == '.' && isDigit(token[1]))) {
         push_double(operandStack, atof(token));
         return ERROR_NONE;
@@ -61,7 +62,7 @@ int calc_process_operator(Stack_double *operandStack, char operator) {
     return error_code;
 }
 
-int calc_process_function(Stack_double *operandStack, char *token) {
+int calc_process_function(Stack_double *operandStack, char const *const token) {
     int func_code = get_function_code(token);
 
     if (func_code != -1) {
@@ -82,7 +83,7 @@ int calc_process_function(Stack_double *operandStack, char *token) {
     return ERROR_UNKNOWN_FUNCTION;
 }
 
-int calc_process_constant(Stack_double *operandStack, char *token) {
+int calc_process_constant(Stack_double *operandStack, char const *const token) {
     int const_code = get_constant_code(token);
     if (const_code != -1) {
         double const_value = get_constant_value(const_code);
@@ -92,7 +93,7 @@ int calc_process_constant(Stack_double *operandStack, char *token) {
     return ERROR_UNKNOWN_FUNCTION;
 }
 
-int calc_process_token(Stack_double *operandStack, char *token) {
+int calc_process_token(Stack_double *operandStack, char const *const token) {
     if (isDigit(token[0]) || (token[0] == '.' && isDigit(token[1]))) {
         return calc_process_operand(operandStack, token);
     } else if (strcmp(token, "~") == 0) {

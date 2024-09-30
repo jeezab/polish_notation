@@ -18,11 +18,11 @@
 #define ERROR_MEMORY_ALLOC -6
 
 int polish_calc(char const *const postfix, double *const result);
-int calc_process_operand(Stack_double *operandStack, char *token);
+int calc_process_operand(Stack_double *operandStack, char const *const token);
 int calc_process_operator(Stack_double *operandStack, char operator);
-int calc_process_function(Stack_double *operandStack, char *token);
-int calc_process_constant(Stack_double *operandStack, char *token);
-int calc_process_token(Stack_double *operandStack, char *token);
+int calc_process_function(Stack_double *operandStack, char const *const token);
+int calc_process_constant(Stack_double *operandStack, char const *const token);
+int calc_process_token(Stack_double *operandStack, char const *const token);
 
 int apply_operator(int const op, double const operand1, double const operand2,
                    double *const result);
