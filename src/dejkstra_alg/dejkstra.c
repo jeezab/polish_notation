@@ -1,7 +1,7 @@
 #include "dejkstra.h"
 
 char *infix_to_postfix(char const *const infix) {
-    char const *const modified_infix = replace_unary_minus(infix);
+    char *modified_infix = replace_unary_minus(infix);
     if (!modified_infix)
         return NULL;
 
@@ -10,10 +10,10 @@ char *infix_to_postfix(char const *const infix) {
         return NULL;
     }
 
-    char const *const postfix = do_postfix_convert(modified_infix);
+    char *const postfix = do_postfix_convert(modified_infix);
 
     free((void *)modified_infix);
-    return (char *const)postfix;
+    return postfix;
 }
 
 char *do_postfix_convert(char const *const modified_infix) {
@@ -23,6 +23,7 @@ char *do_postfix_convert(char const *const modified_infix) {
     int const length = strlen(modified_infix);
     char *const postfix = (char *)malloc(4 * length * sizeof(char));
     if (!postfix) {
+        destroyStack_int(&operator_stack);
         return NULL;
     }
 
@@ -41,6 +42,8 @@ char *do_postfix_convert(char const *const modified_infix) {
                    modified_infix[i] == ')') {
             parse_operator_parentheses(modified_infix, &i, postfix, &j,
                                        &operator_stack);
+        } else {
+            i++;
         }
     }
 
@@ -68,7 +71,7 @@ char *parse_letter(char const *const modified_infix, int *const i,
     int k = 0;
 
     while (isLetter(modified_infix[*i]) || isDigit(modified_infix[*i])) {
-        if (k < 9) { // prevent buffer overflow
+        if (k < 9) {
             name[k++] = modified_infix[*i];
         }
         (*i)++;
@@ -79,10 +82,16 @@ char *parse_letter(char const *const modified_infix, int *const i,
     if (func_code != -1) {
         push_int(operator_stack, func_code);
     } else {
-        // append variable names or single variables to postfix
-        strcpy(&postfix[*j], name);
-        *j += strlen(name);
-        postfix[(*j)++] = ' ';
+        int const const_code = get_constant_code(name);
+        if (const_code != -1) {
+            strcpy(&postfix[*j], name);
+            *j += strlen(name);
+            postfix[(*j)++] = ' ';
+        } else {
+            strcpy(&postfix[*j], name);
+            *j += strlen(name);
+            postfix[(*j)++] = ' ';
+        }
     }
 
     return postfix;
@@ -138,7 +147,7 @@ void pop_until_left_paren(Stack_int *const operator_stack, char *const postfix,
         append_operator_or_function(op, postfix, j);
     }
     if (!isEmpty_int(operator_stack)) {
-        pop_int(operator_stack); // Pop '('
+        pop_int(operator_stack);
     }
 }
 
@@ -162,7 +171,7 @@ char *replace_unary_minus(char const *const expression) {
     char *const new_expression = (char *)malloc(2 * length * sizeof(char));
 
     if (!new_expression) {
-        fprintf(stderr, "Memory allocation failed! [replaceUnaryMinus()]\n");
+        fprintf(stderr, "Memory allocation failed! [replace_unary_minus()]\n");
         return NULL;
     }
 

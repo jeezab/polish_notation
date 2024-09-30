@@ -7,16 +7,29 @@ int polish_calc(char const *const postfix, double *const result) {
 
     char *const expr_copy =
         (char *)malloc((strlen(postfix) + 1) * sizeof(char));
+    if (!expr_copy) {
+        fprintf(stderr, "Memory allocation failed! [polish_calc()]\n");
+        destroyStack_double(&operandStack);
+        return ERROR_MEMORY_ALLOC;
+    }
     strcpy(expr_copy, postfix);
-    char const *token = strtok(expr_copy, " ");
+    char *token = strtok(expr_copy, " ");
 
     while (token != NULL && error_code == ERROR_NONE) {
-        if (isDigit(token[0])) {
+        if (isDigit(token[0]) || (token[0] == '.' && isDigit(token[1]))) {
             push_double(&operandStack, atof(token));
         } else if (strcmp(token, "~") == 0) {
+            if (isEmpty_double(&operandStack)) {
+                error_code = ERROR_UNKNOWN_OPERATOR;
+                break;
+            }
             double operand = pop_double(&operandStack);
             push_double(&operandStack, -operand);
-        } else if (isOperator(token[0])) {
+        } else if (isOperator(token[0]) && strlen(token) == 1) {
+            if (operandStack.top == NULL || operandStack.top->next == NULL) {
+                error_code = ERROR_UNKNOWN_OPERATOR;
+                break;
+            }
             double operand2 = pop_double(&operandStack);
             double operand1 = pop_double(&operandStack);
             double temp_result;
@@ -28,6 +41,10 @@ int polish_calc(char const *const postfix, double *const result) {
         } else {
             int func_code = get_function_code(token);
             if (func_code != -1) {
+                if (isEmpty_double(&operandStack)) {
+                    error_code = ERROR_UNKNOWN_FUNCTION;
+                    break;
+                }
                 double operand = pop_double(&operandStack);
                 double temp_result;
                 error_code = apply_function(func_code, operand, &temp_result);
@@ -35,14 +52,27 @@ int polish_calc(char const *const postfix, double *const result) {
                     push_double(&operandStack, temp_result);
                 }
             } else {
-                error_code = ERROR_UNKNOWN_FUNCTION;
+                int const_code = get_constant_code(token);
+                if (const_code != -1) {
+                    double const_value = get_constant_value(const_code);
+                    push_double(&operandStack, const_value);
+                } else {
+                    error_code = ERROR_UNKNOWN_FUNCTION;
+                }
             }
         }
         token = strtok(NULL, " ");
     }
 
     if (error_code == ERROR_NONE) {
-        *result = pop_double(&operandStack);
+        if (!isEmpty_double(&operandStack)) {
+            *result = pop_double(&operandStack);
+            if (!isEmpty_double(&operandStack)) {
+                error_code = ERROR_UNKNOWN_OPERATOR;
+            }
+        } else {
+            error_code = ERROR_UNKNOWN_OPERATOR;
+        }
     }
 
     free(expr_copy);
@@ -51,7 +81,6 @@ int polish_calc(char const *const postfix, double *const result) {
     return error_code;
 }
 
-// function to apply binary ops
 int apply_operator(int const op, double const operand1, double const operand2,
                    double *const result) {
     switch (op) {
@@ -78,7 +107,6 @@ int apply_operator(int const op, double const operand1, double const operand2,
     }
 }
 
-// function to apply unary funcs
 int apply_function(int const func, double const operand, double *const result) {
     switch (func) {
     case FUNC_SIN:
@@ -128,7 +156,7 @@ int print_error_calc(int const error_code) {
         fprintf(stderr, "Error: Non-positive input for ln\n");
         break;
     case ERROR_UNKNOWN_OPERATOR:
-        fprintf(stderr, "Error: Unknown operator\n");
+        fprintf(stderr, "Error: Unknown operator or insufficient operands\n");
         break;
     case ERROR_UNKNOWN_FUNCTION:
         fprintf(stderr, "Error: Unknown function\n");
@@ -138,4 +166,13 @@ int print_error_calc(int const error_code) {
         break;
     }
     return error_code;
+}
+
+double get_constant_value(int const code) {
+    switch (code) {
+    case CONST_PI:
+        return 3.14159265358979323846;
+    default:
+        return 0.0;
+    }
 }

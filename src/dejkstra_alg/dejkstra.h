@@ -36,7 +36,6 @@ int is_unary_minus(char const *const expression, int const i,
                    int const expect_operand);
 int is_expecting_operand(char const token);
 
-char *get_function_name(int const code);
 int precedence(int const op);
 int is_left_associative(int const op);
 

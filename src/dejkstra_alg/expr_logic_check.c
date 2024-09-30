@@ -1,8 +1,8 @@
 #include "./expr_logic_check.h"
 
-/* function to check the logical correctness of the expression
- * return 1 if correct
- * return 0 if incorrect
+/* Функция для проверки логической корректности выражения
+ * Возвращает 1, если корректно
+ * Возвращает 0, если некорректно
  */
 int check_expression(char const *const original_expression,
                      char const *const modified_expression) {
@@ -163,6 +163,13 @@ int handle_letter(char const *const modified_expression,
         }
         (*operand_count)++;
         (*expect_operand) = 0;
+    } else if (strcmp(name, "PI") == 0) {
+        if (!(*expect_operand)) {
+            print_error(original_expression, start_pos, "Unexpected constant");
+            return 0;
+        }
+        (*operand_count)++;
+        (*expect_operand) = 0;
     } else {
         print_error(original_expression, start_pos,
                     "Undefined function name or variable");
@@ -189,49 +196,6 @@ int last_check(int const balance, int const expect_operand,
         return 0;
     }
     return 1;
-}
-
-int get_function_code(char const *const func_name) {
-    if (strcmp(func_name, "sin") == 0)
-        return FUNC_SIN;
-    if (strcmp(func_name, "cos") == 0)
-        return FUNC_COS;
-    if (strcmp(func_name, "tg") == 0 || strcmp(func_name, "tan") == 0)
-        return FUNC_TAN;
-    if (strcmp(func_name, "ctg") == 0)
-        return FUNC_COT;
-    if (strcmp(func_name, "sqrt") == 0)
-        return FUNC_SQRT;
-    if (strcmp(func_name, "ln") == 0)
-        return FUNC_LN;
-    if (strcmp(func_name, "exp") == 0)
-        return FUNC_EXP;
-    return -1; // func name error
-}
-
-int is_function_token(int const code) {
-    return code >= FUNC_SIN && code <= FUNC_EXP;
-}
-
-char *get_function_name(int const code) {
-    switch (code) {
-    case FUNC_SIN:
-        return "sin";
-    case FUNC_COS:
-        return "cos";
-    case FUNC_TAN:
-        return "tan";
-    case FUNC_COT:
-        return "cot";
-    case FUNC_SQRT:
-        return "sqrt";
-    case FUNC_LN:
-        return "ln";
-    case FUNC_EXP:
-        return "exp";
-    default:
-        return NULL;
-    }
 }
 
 void print_error(char const *const expression, int const error_pos,

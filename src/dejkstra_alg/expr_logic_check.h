@@ -6,21 +6,6 @@
 
 #include "../whotype/whotype.h"
 
-#define OP_PLUS '+'
-#define OP_MINUS '-'
-#define OP_MULTIPLY '*'
-#define OP_DIVIDE '/'
-#define OP_POWER '^'
-#define OP_UNARY_MINUS '~'
-
-#define FUNC_SIN 256
-#define FUNC_COS 257
-#define FUNC_TAN 258
-#define FUNC_COT 259
-#define FUNC_SQRT 260
-#define FUNC_LN 261
-#define FUNC_EXP 262
-
 int check_expression(char const *const original_expression,
                      char const *const modified_expression);
 
@@ -50,9 +35,6 @@ int handle_letter(char const *const modified_expression,
                   int *const operand_count);
 int last_check(int const balance, int const expect_operand,
                int const operand_count, char const *const original_expression);
-
-int get_function_code(char const *const func_name);
-int is_function_token(int const code);
 
 void print_error(char const *const expression, int const error_pos,
                  char const *const message);
