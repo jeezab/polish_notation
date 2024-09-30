@@ -35,7 +35,10 @@ The code is written in C and uses a stack-based approach.
   - `*`, `/`, `^`
 
 - **Supported Functions:**
-  - `sin`, `cos`, `tan`, `cot`, `sqrt`, `ln`
+  - `sin`, `cos`, `tan`, `cot`, `sqrt`, `ln`, `exp`
+
+- **Supported Constants**
+  - `PI`
 
 - **Description:**
   - The expression is converted using a stack for operators.
